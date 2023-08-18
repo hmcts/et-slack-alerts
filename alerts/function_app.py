@@ -3,18 +3,18 @@ import os
 import azure.functions as func
 import logging
 import requests
-import os
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
 
 # Replace with your Azure Key Vault URL and secret name
-key_vault_url = "https://et-aat.vault.azure.net/"
+key_vault_url = "https://etslackalertkv.vault.azure.net/"
 secret_name = "slack-webhook-url"
 
 # Create a DefaultAzureCredential instance to authenticate
 # using the managed identity of the Azure Function
 credential = DefaultAzureCredential()
+
 
 # Create a SecretClient to interact with the Azure Key Vault
 secret_client = SecretClient(vault_url=key_vault_url, credential=credential)
