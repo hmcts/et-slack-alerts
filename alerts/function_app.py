@@ -1,3 +1,4 @@
+import json
 import os
 
 import azure.functions as func
@@ -23,10 +24,17 @@ app = func.FunctionApp()
 
 
 @app.function_name(name="AzureTrigger")
-@app.route(route="hello")
-def test_function(req: func.HttpRequest) -> func.HttpResponse:
-    requests.post(secret_client.get_secret(secret_name), json={"text": "Hello from Azure!"})
-    return func.HttpResponse("AzureTrigger function processed a request!")
+@app.route(route="exceptions", auth_level=func.AuthLevel.ANONYMOUS)
+def trigger_function(req: func.HttpRequest) -> func.HttpResponse:
+    body = req.get_json()
+    message = json.dumps(body)
+    logging.info(f"AzureTrigger function processed a request! {message}")
+    planned_response = message
+    logging.info(f"Planned response: {planned_response}")
+    response = requests.post(secret_client.get_secret(secret_name).value, json={"text": message})
+    logging.info(response.raise_for_status())
+    return func.HttpResponse(f"{response.status_code}, {response.text}")
+
 
 # Function to construct the link to the log entry in Azure portal
 def construct_log_link(subscription_id, resource_group_name, app_insights_resource_name, operation_id):
