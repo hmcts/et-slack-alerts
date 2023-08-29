@@ -59,7 +59,7 @@ def query_application_insights():
     headers = {'x-api-key': api_key}
     data = {
         "query": """exceptions
-                    | where timestamp > ago(600min)
+                    | where timestamp > ago(5min)
                     | where appName == 'et-prod'
                     | project timestamp, type, outerMessage, operation_Id
                     | order by timestamp desc"""
@@ -194,8 +194,10 @@ def trigger_function(AzureTrigger: func.TimerRequest) -> None:
     query_data = query_application_insights()
     rows = get_rows_from_json(query_data)
     operation_ids = get_unique_operation_ids(rows)
+    if len(operation_ids) == 0:
+        logging.info("no events found")
+        exit(0)
     all_classes = unique_exceptions(rows)
-
     counts = get_counts(rows, operation_ids)
     error_data = build_error_table(all_classes)
     built_message = generate_message(error_data, counts)
