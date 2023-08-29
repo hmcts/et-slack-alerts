@@ -1,6 +1,4 @@
 import json
-import os
-
 import azure.functions as func
 import logging
 import requests
@@ -10,7 +8,7 @@ from azure.keyvault.secrets import SecretClient
 
 # Replace with your Azure Key Vault URL and secret name
 key_vault_url = "https://etslackalertkv.vault.azure.net/"
-secret_name = "slack-webhook-url"
+webhook_url = "slack-webhook-url"
 
 # Create a DefaultAzureCredential instance to authenticate
 # using the managed identity of the Azure Function
@@ -31,7 +29,7 @@ def trigger_function(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"AzureTrigger function processed a request! {message}")
     planned_response = message
     logging.info(f"Planned response: {planned_response}")
-    response = requests.post(secret_client.get_secret(secret_name).value, json={"text": message})
+    response = requests.post(secret_client.get_secret(webhook_url).value, json={"text": message})
     logging.info(response.raise_for_status())
     return func.HttpResponse(f"{response.status_code}, {response.text}")
 
