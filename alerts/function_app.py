@@ -196,7 +196,7 @@ def trigger_function(AzureTrigger: func.TimerRequest) -> None:
     operation_ids = get_unique_operation_ids(rows)
     if len(operation_ids) == 0:
         logging.info("no events found")
-        exit(0)
+        return
     all_classes = unique_exceptions(rows)
     counts = get_counts(rows, operation_ids)
     error_data = build_error_table(all_classes)
@@ -205,3 +205,4 @@ def trigger_function(AzureTrigger: func.TimerRequest) -> None:
     if response_from_slack.raise_for_status() is not None:
         logging.error(response_from_slack.raise_for_status())
     logging.info(func.HttpResponse(f"{response_from_slack.status_code}, {response_from_slack.text}"))
+    return
