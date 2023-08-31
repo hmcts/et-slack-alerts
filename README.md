@@ -17,7 +17,7 @@ The function is scheduled to run every 5 minutes and performs the following task
 
 <figure>
   <img width="520" alt="image" src="https://github.com/hmcts/et-slack-alerts/assets/18507008/7f0790ae-b49a-42e5-b704-2c0411e149ad">
-  <figcaption>Example Slack alert</figcaption>
+  <br/><figcaption>Example Slack alert</figcaption>
 </figure>
 
 
