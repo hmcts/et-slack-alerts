@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a timer-trigger based Azure Function App written in Python to monitor an Azure-based application for any given event (in our case, we focused on exceptions). If events have occurred, send alerts to a given slack channel. 
+This is a timer-trigger based Azure Function App written in Python to monitor an Azure-based application for any given event (in our case, we focused on exceptions). If events have occurred, it will send alerts to a given slack channel. 
 
 It was deliberately designed to be easily reusable and extendable by other teams. 
 
@@ -60,8 +60,11 @@ cd [wherever you cloned it]
 <optionally install a virtual environment using e.g. venv>
 pip install -r requirements.txt
 ```
-3. Follow the [instructions here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-get-started?pivots=programming-language-python) to get it running locally and published to a given resource group. If you need any help feel free to reach out.
+3. Follow the [instructions here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-get-started?pivots=programming-language-python) to get it running locally and published to a given resource group. If you need any help, feel free to reach out.
+
+### Todo
+- Investigate whether it's worth adding a slight delay on log checking to compensate for [Azure's logging latency](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-ingestion-time).
 
 ### Contributing
 
-Feel free to send a PR for any possible improvements.
+Feel free to send a PR with any possible improvements.
