@@ -6,7 +6,7 @@
 
 This is a timer-trigger based Azure Function App written in Python to monitor an Azure-based application for any given event (in our case, we focused on exceptions). If events have occurred, send alerts to a given slack channel. 
 
-It was deliberately designed to be reusable by other teams. 
+It was deliberately designed to be easily reusable and extendable by other teams. 
 
 The function is scheduled to run every 5 minutes and performs the following tasks:
 - Authenticates with an Azure Key Vault to retrieve relevant environment variables.
