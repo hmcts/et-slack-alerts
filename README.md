@@ -30,11 +30,11 @@ This particular Azure function is [essentially free](https://azure.microsoft.com
 Alternatives to this approach generally use [Azure Monitor Alerts](https://azure.microsoft.com/en-gb/pricing/details/monitor/#pricing) which are more expensive ($1.50 per alert per month).
 
 ### Prerequisites
-- Azure Functions Core Tools
-- Python 3.7+
-- Azure CLI
+- [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp#install-the-azure-functions-core-tools)
+- [Python 3.7+](https://www.python.org/downloads/)
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 - An Azure account/subscription
-- An Application Insights instance you want to monitor
+- An [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview?tabs=net) instance you want to monitor
 
 ## Environment Variables
 This function requires several environment variables (defined within the given keyvault)
