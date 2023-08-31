@@ -8,6 +8,7 @@ This is a timer-trigger based Azure Function App written in Python to monitor an
 
 It was deliberately designed to be easily reusable and extendable by other teams. 
 
+### Functionality
 The function is scheduled to run every 5 minutes and performs the following tasks:
 - Authenticates with an Azure Key Vault to retrieve relevant environment variables.
 - Queries application insights for a given query.
