@@ -9,11 +9,12 @@ This is a timer-trigger based Azure Function App written in Python to monitor an
 It was deliberately designed to be easily reusable and extendable by other teams. 
 
 ### Functionality
-The function is scheduled to run every 5 minutes and performs the following tasks:
+The function is scheduled to run every 5 minutes (customisable) and performs the following tasks:
 - Authenticates with an Azure Key Vault to retrieve relevant environment variables.
-- Queries application insights for a given query.
+- Queries application insights for a given query (customisable).
 - Filters unique operations (some log entries cover multiple operations, which can clutter up the returned logs.)
-- Builds a slack message containing error summaries and link to both the exception itself and the traces leading up to and following it.
+- Sends a second query to application insights to get the entire log history of a given operation.
+- Builds a slack message containing a formatted table of unique event triggering operations in the given timeframe, with generated inline links to the relevant log histories.
 - Sends a slack alert (via an environment variable-defined webhook url)
 
 <figure>
