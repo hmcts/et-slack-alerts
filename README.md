@@ -64,6 +64,7 @@ pip install -r requirements.txt
 
 ### Todo
 - Investigate whether it's worth adding a slight delay on log checking to compensate for [Azure's logging latency](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-ingestion-time).
+- Use the same link generation approach for [Azure Monitor Transaction Logs](https://learn.microsoft.com/en-us/azure/azure-monitor/app/transaction-diagnostics).
 
 ### Contributing
 
