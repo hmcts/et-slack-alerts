@@ -15,9 +15,14 @@ The function is scheduled to run every 5 minutes and performs the following task
 - Builds a slack message containing error summaries and link to both the exception itself and the traces leading up to and following it.
 - Sends a slack alert (via an environment variable-defined webhook url)
 
+<img width="520" alt="image" src="https://github.com/hmcts/et-slack-alerts/assets/18507008/7f0790ae-b49a-42e5-b704-2c0411e149ad">
+
+
 ### Justifications
 ## Why Python?
 As you all know, the HMCTS tech stack nowadays is mostly Java and NodeJS. The reason for choosing Python in this specific instance was to address the ["cold start"](https://mikhail.io/serverless/coldstarts/azure/) problem. It has the lowest execution time variability of all language options, and is second only to C# in median cold start duration.
+<img width="689" alt="image" src="https://github.com/hmcts/et-slack-alerts/assets/18507008/ede8fc2a-3e2f-49ac-adb8-e1bcfbc096d8">
+
 
 ## Costs
 This particular Azure function is [essentially free](https://azure.microsoft.com/en-gb/pricing/details/functions/#pricing) in terms of both executions (8640 per month, comfortably within the free tier limit of 1 million) and resource consumption (again, within the 40k GB-s free tier range).
