@@ -46,7 +46,7 @@ Alternatives to this approach generally use [Azure Monitor Alerts](https://azure
 This function requires several environment variables (defined within the given keyvault)
 - `api-key` - An API key for your given app insights instance. You can obtain one of these via the `API Access` section in the left hand side navigation of your Application Insights instance.
 - `app-id` - The 'Instrumentation Key' of the Application Insights instance. This can be found in the top part of the Overview section.
-- `slack-webhook-url` - A slack webhook URL for you to send messages to. For this part you will likely need to contact myself (@Danny on Slack) or a Slack administrator.
+- `slack-webhook-url` - A slack webhook URL for you to send messages to. For this part you will likely need to contact myself (@Danny on Slack) or a Slack administrator to get a custom slack 'app' set up. This is much more trivial than it sounds, a few clicks at most.
 - `tenant-id` - Standard for the entire organisation.
 - `resource-group-name` - The resource group name that the Application Insights instance is stored within.
 - `app-insights-resource-name` - The name of the Application Insights instance.
