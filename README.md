@@ -37,6 +37,7 @@ Alternatives to this approach generally use [Azure Monitor Alerts](https://azure
 - [Python 3.7+](https://www.python.org/downloads/)
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 - An Azure account/subscription
+- An [Azure Key Vault](https://azure.microsoft.com/en-gb/products/key-vault)
 - An [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview?tabs=net) instance you want to monitor
 
 ## Environment Variables
