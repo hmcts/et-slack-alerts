@@ -62,6 +62,9 @@ cd [wherever you cloned it]
 pip install -r requirements.txt
 ```
 3. Follow the [instructions here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-get-started?pivots=programming-language-python) to get it running locally and published to a given resource group. If you need any help, feel free to reach out.
+4. You will also need to ensure that the Function App has access to the Key Vault.
+- Navigate to Key Vault -> Access Policies -> Add Access Policy. Select "Get".
+- For "Select principal", choose your Function App's identity.
 
 ### Todo
 - Investigate whether it's worth adding a slight delay on log checking to compensate for [Azure's logging latency](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-ingestion-time).
