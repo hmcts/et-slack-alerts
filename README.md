@@ -11,7 +11,7 @@ It was *deliberately designed* to be easily reusable and extendable by other tea
 ### Functionality
 The function is scheduled to run every 5 minutes (customisable) and performs the following tasks:
 - Authenticates with an Azure Key Vault to retrieve relevant environment variables.
-- Queries application insights for a given query (customisable).
+- Queries application insights to capture all log entries returned for a given query and timescale (both customisable).
 - Filters unique operations (some log entries cover multiple operations, which can clutter up the returned logs.)
 - Sends a second query to application insights to get the entire log history of a given operation.
 - Builds a slack message containing a formatted table of unique event triggering operations in the given timeframe, with generated inline links to the relevant log histories.
