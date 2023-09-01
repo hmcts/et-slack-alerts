@@ -30,7 +30,7 @@ As you all know, the HMCTS tech stack nowadays is mostly Java and NodeJS. The re
 
 
 ### Costs
-This particular Azure function is [essentially free](https://azure.microsoft.com/en-gb/pricing/details/functions/#pricing) in terms of both executions (8640 per month, comfortably within the free tier limit of 1 million) and resource consumption (again, within the 40k GB-s free tier range).
+This particular Azure function is [essentially free](https://azure.microsoft.com/en-gb/pricing/details/functions/#pricing) in terms of both executions (8640 per month, comfortably within the free tier limit of 1 million) and resource consumption (again, easily within the 400k GB-s free tier range).
 
 Alternatives to this approach generally use [Azure Monitor Alerts](https://azure.microsoft.com/en-gb/pricing/details/monitor/#pricing) which are more expensive ($1.50 per alert per month).
 
