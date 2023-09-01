@@ -17,6 +17,7 @@ The function is scheduled to run every 5 minutes (customisable) and performs the
 - Builds a slack message containing a formatted table of unique event triggering operations in the given timeframe, with generated inline links to the relevant log histories.
 - Sends a slack alert (via an environment variable-defined webhook url)
 
+
 <figure>
   <img width="520" alt="image" src="https://github.com/hmcts/et-slack-alerts/assets/18507008/7f0790ae-b49a-42e5-b704-2c0411e149ad">
   <br/><figcaption>Example Slack alert</figcaption>
@@ -25,7 +26,8 @@ The function is scheduled to run every 5 minutes (customisable) and performs the
 
 ## Justifications
 ### Why Python?
-As you all know, the HMCTS tech stack nowadays is mostly Java and NodeJS. The reason for choosing Python in this specific instance was to address the ["cold start"](https://mikhail.io/serverless/coldstarts/azure/) problem. It has the lowest execution time variability of all language options, and is second only to C# in median cold start duration.
+The reason for choosing Python in this specific instance was to address the ["cold start"](https://mikhail.io/serverless/coldstarts/azure/) problem. It has the lowest execution time variability of all language options, and is second only to C# in median cold start duration.
+
 <img width="689" alt="image" src="https://github.com/hmcts/et-slack-alerts/assets/18507008/ede8fc2a-3e2f-49ac-adb8-e1bcfbc096d8">
 
 
