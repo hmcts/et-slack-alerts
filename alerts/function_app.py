@@ -50,7 +50,7 @@ class ErrorLog:
             "error_message": self.error_message,
             "operation_id": self.operation_id,
             "azure_link": self.azure_link
-        }gg
+        }
 
 
 # Function to query Application Insights
@@ -59,13 +59,12 @@ def query_application_insights():
     headers = {'x-api-key': api_key}
     data = {
         "query": """union(
-    exceptions
+    app('et-prod').exceptions
     | where timestamp > ago(5min)
-    | where appName == 'et-prod'
     | project timestamp, errorType = type, errorMessage = outerMessage, operation_Id),
 (
-    traces
-    | where timestamp > ago(5min) and appName == 'et-prod' and severityLevel == 3
+    app('et-prod').traces
+    | where timestamp > ago(5min) and severityLevel == 3
     | project timestamp, errorType = message, errorMessage = message, operation_Id 
 )
 | order by timestamp desc"""
