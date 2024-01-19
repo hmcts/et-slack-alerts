@@ -58,19 +58,26 @@ def query_application_insights():
     url = f"https://api.applicationinsights.io/v1/apps/{app_id}/query"
     headers = {'x-api-key': api_key}
     data = {
-        "query": """exceptions
-                    | where timestamp > ago(5min)
-                    | where appName == 'et-prod'
-                    | project timestamp, type, outerMessage, operation_Id
-                    | order by timestamp desc"""
+        "query": """union(
+    app('et-prod').exceptions
+    | where timestamp > ago(5min)
+    | project timestamp, errorType = type, errorMessage = outerMessage, operation_Id),
+(
+    app('et-prod').traces
+    | where timestamp > ago(5min) and severityLevel == 3
+    | project timestamp, errorType = message, errorMessage = message, operation_Id 
+)
+| order by timestamp desc"""
     }
     response = requests.post(url, headers=headers, json=data)
+    logging.info(response.json())
     return response.json()
 
 
 # Function to get the table rows from the raw JSON response
 def get_rows_from_json(rows_as_json):
     list_of_rows = rows_as_json['tables'][0]['rows']
+    logging.info(list_of_rows)
     error_logs = [ErrorLog(*row + ['']) for row in list_of_rows]
     return error_logs
 
@@ -84,7 +91,7 @@ def unique_exceptions(all_exceptions):
 
     # Get the first error-causing operation
     for log in all_exceptions:
-        print(log.operation_id)
+        logging.info(log.operation_id)
         if log.operation_id not in unique_operations_read:
             unique_operations_read.append(log.operation_id)
             unique_logs.append(log)
@@ -109,7 +116,7 @@ def get_counts(rows, operation_ids):
 
 # Function to perform further queries to get specific logs relating to a given operation ID
 def parametrise_query(operation_id):
-    return f'union traces, exceptions | where operation_Id == "{operation_id}"'
+    return f'union traces, exceptions, requests | where operation_Id == "{operation_id}"'
 
 
 # Extremely ugly function to generate the Azure link to the logs for a given operation ID
@@ -194,6 +201,7 @@ def trigger_function(AzureTrigger: func.TimerRequest) -> None:
     query_data = query_application_insights()
     rows = get_rows_from_json(query_data)
     operation_ids = get_unique_operation_ids(rows)
+    logging.info(query_data)
     if len(operation_ids) == 0:
         logging.info("no events found")
         return
