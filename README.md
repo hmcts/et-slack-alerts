@@ -71,6 +71,16 @@ pip install -r requirements.txt
 - Navigate to `Key Vault` -> `Access Policies` -> `Add Access Policy`. Select `Get`.
 - For `Select principal`, choose your Function App's identity.
 
+## Deployment
+
+To deploy the function to Azure:
+
+```bash
+# From the alerts directory
+cd alerts
+func azure functionapp publish <your-function-app-name>
+```
+
 ### Todo
 - Investigate whether it's worth adding a slight delay on log checking to compensate for [Azure's logging latency](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-ingestion-time).
 - Use the same link generation approach for [Azure Monitor Transaction Logs](https://learn.microsoft.com/en-us/azure/azure-monitor/app/transaction-diagnostics).
