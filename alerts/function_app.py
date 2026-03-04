@@ -27,11 +27,16 @@ logs_client = LogsQueryClient(credential)
 # Get secrets from Azure Key Vault
 try:
     workspace_id = secret_client.get_secret('app-insights-workspace-id').value
-    slack_webhook_url = secret_client.get_secret('slack-webhook-url').value
+    slack_webhook_url = secret_client.get_secret('slack-webhook-url').value.strip()
     tenant_id = secret_client.get_secret('tenant-id').value
     resource_group_name = secret_client.get_secret('resource-group-name').value
     app_insights_resource_name = secret_client.get_secret('app-insights-resource-name').value
     subscription_id = secret_client.get_secret('subscription-id').value
+    
+    # Validate webhook URL format
+    if not slack_webhook_url.startswith('https://hooks.slack.com/services/'):
+        logging.error(f"Invalid Slack webhook URL format: {slack_webhook_url[:50]}...")
+    logging.info(f"Loaded webhook URL: {slack_webhook_url[:40]}...")
 except Exception as e:
     logging.error(f"Issue communicating with keyvault: {e}")
     exit(1)
@@ -171,7 +176,7 @@ def compress_and_encode_query(query_str):
 
 
 # Function to generate the Slack message
-def generate_message(errors, error_counts):
+def generate_message(errors, error_counts, truncated=False, total_errors=0):
     blocks = [
         {
             "type": "header",
@@ -204,6 +209,16 @@ def generate_message(errors, error_counts):
         }
     ]
     blocks.extend(errors)
+    
+    if truncated:
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f":warning: *Message truncated* - Showing {len(errors)} of {total_errors} unique operations due to Slack's 50 block limit. Check Application Insights for full details."
+            }
+        })
+    
     message = {"blocks": blocks}
 
     return message
@@ -213,9 +228,16 @@ def generate_message(errors, error_counts):
 def build_error_table(rows):
     output = []
     for i, j in enumerate(rows):
+        # Truncate long URLs and validate
+        azure_link = j.azure_link[:2000] if len(j.azure_link) > 2000 else j.azure_link
+        operation_id_display = j.operation_id[:50] if len(j.operation_id) > 50 else j.operation_id
+        error_type_display = j.error_type[:100] if j.error_type and len(j.error_type) > 100 else (j.error_type or 'Unknown')
+        
+        logging.info(f"Azure link length: {len(j.azure_link)}, Operation ID: {j.operation_id}")
+        
         output.append({"type": "section",
-                       "fields": [{"type": "mrkdwn", "text": f'{j.error_type}'},
-                                  {"type": "mrkdwn", "text": f'<{j.azure_link}|{j.operation_id}>'}]
+                       "fields": [{"type": "mrkdwn", "text": error_type_display},
+                                  {"type": "mrkdwn", "text": f'<{azure_link}|{operation_id_display}>'}]
                        })
     return output
 
@@ -235,10 +257,30 @@ def trigger_function(AzureTrigger: func.TimerRequest) -> None:
         return
     all_classes = unique_exceptions(rows)
     counts = get_counts(rows, operation_ids)
-    error_data = build_error_table(all_classes)
-    built_message = generate_message(error_data, counts)
-    response_from_slack = requests.post(slack_webhook_url, json=built_message)
-    if response_from_slack.raise_for_status() is not None:
-        logging.error(response_from_slack.raise_for_status())
-    logging.info(func.HttpResponse(f"{response_from_slack.status_code}, {response_from_slack.text}"))
+    
+    # Slack has a limit of 50 blocks per message
+    # Header (1) + divider (1) + counts section (1) + divider (1) + header row (1) = 5 blocks
+    # Each error takes 1 block, so max errors = 50 - 5 - 1 (for truncation notice) = 44
+    MAX_ERRORS = 44
+    truncated = len(all_classes) > MAX_ERRORS
+    errors_to_show = all_classes[:MAX_ERRORS] if truncated else all_classes
+    
+    error_data = build_error_table(errors_to_show)
+    built_message = generate_message(error_data, counts, truncated, len(all_classes))
+    
+    # Log message size for debugging
+    message_json = json.dumps(built_message)
+    logging.info(f"Message size: {len(message_json)} bytes, blocks: {len(built_message.get('blocks', []))}")
+    
+    try:
+        response_from_slack = requests.post(slack_webhook_url, json=built_message, timeout=10)
+        response_from_slack.raise_for_status()
+        logging.info(f"Successfully posted to Slack: {response_from_slack.status_code}")
+    except requests.exceptions.HTTPError as e:
+        logging.error(f"Slack API rejected request: {e.response.status_code} - {e.response.text}")
+        logging.error(f"Message preview: {message_json[:500]}...")
+        raise
+    except Exception as e:
+        logging.error(f"Failed to post to Slack: {e}")
+        raise
     return
