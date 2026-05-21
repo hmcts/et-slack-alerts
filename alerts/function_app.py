@@ -66,12 +66,12 @@ def query_application_insights():
     query = """union(
     app('et-prod').exceptions
     | where timestamp > ago(5min)
-    | where not (outerMessage has 'invalid csrf token' and operation_Name == 'POST /dynatraceSyntheticBeaconEndpoint')
+    | where not (outerMessage has 'invalid csrf token')
     | project timestamp, errorType = type, errorMessage = outerMessage, operation_Id),
 (
     app('et-prod').traces
     | where timestamp > ago(5min) and severityLevel == 3
-    | where not (message has 'invalid csrf token' and operation_Name == 'POST /dynatraceSyntheticBeaconEndpoint')
+    | where not (message has 'invalid csrf token')
     | project timestamp, errorType = message, errorMessage = message, operation_Id 
 )
 | order by timestamp desc"""
